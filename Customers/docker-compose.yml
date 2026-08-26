@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  customers:
+    build: ./Customers
+    container_name: customers_service
+    ports:
+      - "8001:8000"
+    environment:
+      - PORT=8000
+      - SERVICE_NAME=Customers
+    env_file:
+      - ./Customers/.env

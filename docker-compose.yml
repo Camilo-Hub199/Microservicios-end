@@ -1,0 +1,148 @@
+services:
+
+  # =========================
+  # BASE DE DATOS CUSTOMERS
+  # =========================
+  mongo-customers:
+    image: mongo:7
+    container_name: mongo_customers
+    restart: unless-stopped
+    volumes:
+      - customers_data:/data/db
+    networks:
+      - micro-net
+
+  # =========================
+  # BASE DE DATOS PRODUCTS
+  # =========================
+  mongo-products:
+    image: mongo:7
+    container_name: mongo_products
+    restart: unless-stopped
+    volumes:
+      - products_data:/data/db
+    networks:
+      - micro-net
+
+  # =========================
+  # BASE DE DATOS SHOPPING
+  # =========================
+  mongo-shopping:
+    image: mongo:7
+    container_name: mongo_shopping
+    restart: unless-stopped
+    volumes:
+      - shopping_data:/data/db
+    networks:
+      - micro-net
+
+  # =========================
+  # CUSTOMERS
+  # =========================
+  customers:
+    build: ./Customers
+    container_name: customers_service
+    restart: unless-stopped
+
+    environment:
+      PORT: 8000
+      DB_URL: mongodb://mongo-customers:27017/customers_db
+      APP_SECRET: mi_secreto_super_seguro
+
+    depends_on:
+      - mongo-customers
+
+    ports:
+      - "8001:8000"
+
+    networks:
+      - micro-net
+
+  # =========================
+  # PRODUCTS
+  # =========================
+  products:
+    build: ./Products
+    container_name: products_service
+    restart: unless-stopped
+
+    environment:
+      PORT: 8000
+      DB_URL: mongodb://mongo-products:27017/products_db
+
+    depends_on:
+      - mongo-products
+
+    ports:
+      - "8002:8000"
+
+    networks:
+      - micro-net
+
+  # =========================
+  # SHOPPING
+  # =========================
+  shopping:
+    build: ./Shopping
+    container_name: shopping_service
+    restart: unless-stopped
+
+    environment:
+      PORT: 8000
+      DB_URL: mongodb://mongo-shopping:27017/shopping_db
+      APP_SECRET: mi_secreto_super_seguro
+
+    depends_on:
+      - mongo-shopping
+
+    ports:
+      - "8003:8000"
+
+    networks:
+      - micro-net
+
+  # =========================
+  # API GATEWAY
+  # =========================
+  api-gateway:
+    build: ./api-getaway
+    container_name: api_gateway
+    restart: unless-stopped
+
+    environment:
+      PORT: 8000
+
+      # Comunicación INTERNA entre contenedores
+      CUSTOMER_SERVICE_URL: http://customers:8000
+      PRODUCTS_SERVICE_URL: http://products:8000
+      SHOPPING_SERVICE_URL: http://shopping:8000
+
+    depends_on:
+      - customers
+      - products
+      - shopping
+
+    ports:
+      - "80:8000"
+
+    networks:
+      - micro-net
+
+
+# =========================
+# VOLÚMENES
+# =========================
+
+volumes:
+  customers_data:
+  products_data:
+  shopping_data:
+
+
+# =========================
+# RED
+# =========================
+
+networks:
+  micro-net:
+    driver: bridge

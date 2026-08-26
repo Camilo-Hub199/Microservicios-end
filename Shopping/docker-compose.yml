@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  shopping:
+    build: ./Shopping
+    container_name: shopping_service
+    ports:
+      - "8003:8000"
+    environment:
+      - PORT=8000
+      - SERVICE_NAME=Shopping
+    env_file:
+      - ./Shopping/.env
