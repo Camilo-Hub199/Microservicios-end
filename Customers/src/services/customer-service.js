@@ -54,6 +54,15 @@ class CustomerService {
         }
     }
 
+    async RemoveAddress(_id, addressId) {
+        try {
+            const address = await this.repository.RemoveAddress(_id, addressId);
+            return FormateData(address);
+        } catch (err) {
+            throw new APIError('Data Not Found', 404, err.message);
+        }
+    }
+
     async GetProfile({ _id }) {
         try {
             const profile = await this.repository.GetProfile(_id);

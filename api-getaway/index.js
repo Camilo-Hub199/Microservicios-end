@@ -129,6 +129,10 @@ app.use((req, res) => {
     });
 });
 
-app.listen(PORT, () => {
-    console.log(`API Gateway escuchando en el puerto ${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`API Gateway escuchando en el puerto ${PORT}`);
+    });
+}
+
+module.exports = app;

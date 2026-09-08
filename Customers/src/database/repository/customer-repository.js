@@ -75,6 +75,25 @@ class CustomerRepository {
             .populate('address');
     }
 
+    async RemoveAddress(customerId, addressId) {
+        const customer = await CustomerModel.findById(customerId);
+
+        if (!customer) {
+            throw new BadRequestError('Customer not found');
+        }
+
+        const accepted = customer.address.filter(
+            (id) => String(id) !== String(addressId)
+        );
+
+        customer.address = accepted;
+        await customer.save();
+
+        await AddressModel.deleteOne({ _id: addressId });
+
+        return customer.address;
+    }
+
     async GetWishList(customerId) {
         const customer = await CustomerModel.findById(customerId);
 
@@ -94,9 +113,9 @@ class CustomerRepository {
 
         const productId = product._id.toString();
 
-        if (!customer.wishlist.some((item) => item._id === productId)) {
+        if (!customer.wishlist.some((item) => String(item._id) === productId)) {
             customer.wishlist.push({
-                ...product.toObject(),
+                ...product,
                 _id: productId
             });
 
@@ -132,7 +151,7 @@ class CustomerRepository {
         const productId = product._id.toString();
 
         const existingItem = customer.cart.find(
-            (item) => item.product._id === productId
+            (item) => String(item.product._id) === productId
         );
 
         if (existingItem) {
@@ -140,7 +159,7 @@ class CustomerRepository {
         } else {
             customer.cart.push({
                 product: {
-                    ...product.toObject(),
+                    ...product,
                     _id: productId
                 },
                 unit: qty
