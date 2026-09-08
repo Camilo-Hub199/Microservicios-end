@@ -14,6 +14,7 @@ customers:
 name: Tests - Customers
 runs-on: ubuntu-latest
 
+```
 defaults:
   run:
     working-directory: Customers
@@ -34,11 +35,13 @@ steps:
 
   - name: Ejecutar pruebas
     run: npm run test:integration
+```
 
 products:
 name: Tests - Products
 runs-on: ubuntu-latest
 
+```
 defaults:
   run:
     working-directory: Products
@@ -59,11 +62,13 @@ steps:
 
   - name: Ejecutar pruebas
     run: npm run test:integration
+```
 
 shopping:
 name: Tests - Shopping
 runs-on: ubuntu-latest
 
+```
 defaults:
   run:
     working-directory: Shopping
@@ -84,11 +89,13 @@ steps:
 
   - name: Ejecutar pruebas
     run: npm run test:integration
+```
 
 gateway:
 name: Tests - API Gateway
 runs-on: ubuntu-latest
 
+```
 defaults:
   run:
     working-directory: api-getaway
@@ -109,4 +116,4 @@ steps:
 
   - name: Ejecutar pruebas
     run: npm run test:integration
-
+```
