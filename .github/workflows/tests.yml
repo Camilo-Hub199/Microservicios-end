@@ -1,0 +1,112 @@
+name: Pruebas automatizadas
+
+on:
+push:
+branches:
+- main
+pull_request:
+branches:
+- main
+
+jobs:
+
+customers:
+name: Tests - Customers
+runs-on: ubuntu-latest
+
+defaults:
+  run:
+    working-directory: Customers
+
+steps:
+  - name: Descargar código
+    uses: actions/checkout@v4
+
+  - name: Configurar Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: 22
+      cache: npm
+      cache-dependency-path: Customers/package-lock.json
+
+  - name: Instalar dependencias
+    run: npm ci
+
+  - name: Ejecutar pruebas
+    run: npm run test:integration
+
+products:
+name: Tests - Products
+runs-on: ubuntu-latest
+
+defaults:
+  run:
+    working-directory: Products
+
+steps:
+  - name: Descargar código
+    uses: actions/checkout@v4
+
+  - name: Configurar Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: 22
+      cache: npm
+      cache-dependency-path: Products/package-lock.json
+
+  - name: Instalar dependencias
+    run: npm ci
+
+  - name: Ejecutar pruebas
+    run: npm run test:integration
+
+shopping:
+name: Tests - Shopping
+runs-on: ubuntu-latest
+
+defaults:
+  run:
+    working-directory: Shopping
+
+steps:
+  - name: Descargar código
+    uses: actions/checkout@v4
+
+  - name: Configurar Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: 22
+      cache: npm
+      cache-dependency-path: Shopping/package-lock.json
+
+  - name: Instalar dependencias
+    run: npm ci
+
+  - name: Ejecutar pruebas
+    run: npm run test:integration
+
+gateway:
+name: Tests - API Gateway
+runs-on: ubuntu-latest
+
+defaults:
+  run:
+    working-directory: api-getaway
+
+steps:
+  - name: Descargar código
+    uses: actions/checkout@v4
+
+  - name: Configurar Node.js
+    uses: actions/setup-node@v4
+    with:
+      node-version: 22
+      cache: npm
+      cache-dependency-path: api-getaway/package-lock.json
+
+  - name: Instalar dependencias
+    run: npm ci
+
+  - name: Ejecutar pruebas
+    run: npm run test:integration
+
